@@ -6,7 +6,7 @@ class App extends React.Component{
       todoValue: ''
     }
   }
-  handleClick = (e) => {
+  handleChange = (e) => {
     this.setState({
       todoValue: e.target.value
     })
@@ -22,6 +22,18 @@ class App extends React.Component{
       todos: [...this.state.todos, todo]
     })
   }
+  handleDelete = (e) => {
+    const id = e.target.id;
+    const allTodos = [...this.state.todos];
+    const deleteTodo = allTodos.splice(id, 1);
+    this.setState({
+      todos: [...allTodos],
+      lastDeletedTodos: [{
+        todo: deleteTodo[0],
+        id
+      }]
+    })
+  }
   render() {
     const{todos} = this.state;
     // let item = '';
@@ -32,13 +44,14 @@ class App extends React.Component{
     // }
     return <React.Fragment>
       <form onSubmit={this.handleSubmit}>
-        <input type="text" onChange={this.handleClick}></input>
+        <input type="text" onChange={this.handleChange}></input>
         <button type="submit">Add todo</button>
       </form>
       {
         todos && todos.map((todo, i) => (
           <div id={i}>
             <span>{todo.name}</span>
+            <button id={i} onClick={this.handleDelete}>X</button>
           </div> 
         ))
       }
